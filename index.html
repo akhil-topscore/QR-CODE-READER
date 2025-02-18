@@ -26,6 +26,24 @@
             margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
+            white-space: pre-wrap;
+            background: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            max-width: 90%;
+            word-wrap: break-word;
+        }
+        #save-btn {
+            display: none;
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -33,19 +51,33 @@
     <h1>QR Code Scanner</h1>
     <div id="qr-reader"></div>
     <p id="qr-result">Scan a QR code to see the result here.</p>
+    <button id="save-btn">Save Data</button>
     
     <script>
         function onScanSuccess(decodedText, decodedResult) {
-            document.getElementById('qr-result').innerText = `Scanned: ${decodedText}`;
+            document.getElementById('qr-result').innerText = `Scanned Data:\n${JSON.stringify(decodedText, null, 2)}`;
+            alert("Scanning Finished!");
+            document.getElementById('save-btn').style.display = 'block';
         }
 
         function onScanError(errorMessage) {
             console.warn(`QR Scan Error: ${errorMessage}`);
         }
 
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const data = document.getElementById('qr-result').innerText.replace('Scanned Data:\n', '');
+            const blob = new Blob([data], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'qr_data.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "qr-reader", 
-            { fps: 10, qrbox: 250 }
+            { fps: 10, qrbox: 250, facingMode: "environment" }
         );
         html5QrcodeScanner.render(onScanSuccess, onScanError);
     </script>
