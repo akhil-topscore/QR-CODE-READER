@@ -55,9 +55,9 @@
     
     <script>
         function onScanSuccess(decodedText, decodedResult) {
-            document.getElementById('qr-result').innerText = `Scanned Data:\n${JSON.stringify(decodedText, null, 2)}`;
             alert("Scanning Finished!");
             document.getElementById('save-btn').style.display = 'block';
+            document.getElementById('qr-result').innerText = `Scanned Data:\n${JSON.stringify(decodedText, null, 2)}`;
         }
 
         function onScanError(errorMessage) {
@@ -68,7 +68,7 @@
             const data = document.getElementById('qr-result').innerText.replace('Scanned Data:\n', '');
             const blob = new Blob([data], { type: 'text/plain' });
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
+            a.href = URL.createObjectURL(blob);~
             a.download = 'qr_data.txt';
             document.body.appendChild(a);
             a.click();
